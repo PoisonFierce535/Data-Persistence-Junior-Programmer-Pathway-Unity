@@ -1,0 +1,17 @@
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.tmp
+*.booproj
+*.svd
+
+.DS_Store
