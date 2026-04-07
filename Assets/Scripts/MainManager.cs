@@ -11,17 +11,33 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
-    private int m_Points;
-    
     private bool m_GameOver = false;
 
-    
-    // Start is called before the first frame update
+    private string playerName;
+    private string bestPlayerName;
+    private int score;
+    private int bestScore;
+
+
+
     void Start()
     {
+        playerName = OtherManager.Instance.playerName;
+        bestPlayerName = OtherManager.Instance.bestPlayerName;
+        bestScore = OtherManager.Instance.bestScore;
+
+        if (bestPlayerName != "" && bestScore != 0) {
+            BestScoreText.text = $"Best Score : {bestPlayerName} : {bestScore}";
+        }
+        else if (bestPlayerName == "" && bestScore == 0) {
+            BestScoreText.text = "Best Score: " + "not set";
+        }
+        ScoreText.text = $"Score : {playerName} : {0}";
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -37,7 +53,6 @@ public class MainManager : MonoBehaviour
             }
         }
     }
-
     private void Update()
     {
         if (!m_Started)
@@ -64,13 +79,21 @@ public class MainManager : MonoBehaviour
 
     void AddPoint(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        score += point;
+        ScoreText.text = $"Score : {playerName} : {score}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        if (score > bestScore) {
+            OtherManager.Instance.bestPlayerName = playerName;
+            OtherManager.Instance.bestScore = score;
+            OtherManager.Instance.SaveBestScoreAndName();
+            BestScoreText.text = $"Best Score : {playerName} : {score}";
+        }
     }
 }
+
